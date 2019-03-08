@@ -28,27 +28,27 @@ async def on_ready():
 async def on_message(message):
     # Time till command
     if message.content.upper().startswith("TIME TILL "):
-        #try:
-        args = message.content.split(" ")
+        try:
+            args = message.content.split(" ")
 
-        # Set message to check
-        mess = (" ".join(args[2:]))
-        # JSON file
-        with open('data/timers.json', 'r') as f:
-            timers = json.load(f)
+            # Set message to check
+            mess = (" ".join(args[2:]))
+            # JSON file
+            with open('data/timers.json', 'r') as f:
+                timers = json.load(f)
 
-        y = timers[mess.upper()]['year']
-        m = timers[mess.upper()]['month']
-        d = timers[mess.upper()]['day']
-        h = timers[mess.upper()]['hour']
-        mm = timers[mess.upper()]['minute']
-        s = timers[mess.upper()]['second']
-        await client.send_message(message.channel, GetTimeTill(mess, y, m, d, h, mm, s))
-
-        #with open('data/timers.json', 'w') as f:
-            #f.write(json.dumps(timers, sort_keys=True, indent=4, separators=(',', ': ')))
-        #except:
-            #await client.send_message(message.channel, "That timer doesn't exist! ensure spelling is exact, or type 'new timer, NAME' to create a new timer")
+            y = timers[mess.upper()]['year']
+            m = timers[mess.upper()]['month']
+            d = timers[mess.upper()]['day']
+            h = timers[mess.upper()]['hour']
+            mm = timers[mess.upper()]['minute']
+            s = timers[mess.upper()]['second']
+            await client.send_message(message.channel, GetTimeTill(mess, y, m, d, h, mm, s))
+            
+            #with open('data/timers.json', 'w') as f:
+                #f.write(json.dumps(timers, sort_keys=True, indent=4, separators=(',', ': ')))
+        except:
+            await client.send_message(message.channel, "That timer doesn't exist! ensure spelling is exact, or type 'new timer, NAME' to create a new timer")
 
     # New timer
     if message.content.upper().startswith("NEW TIMER, "):
