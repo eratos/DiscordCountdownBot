@@ -5,6 +5,7 @@ import asyncio
 import datetime
 import json
 import threading
+from dateutil.relativedelta import relativedelta
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "time till ")
@@ -44,7 +45,7 @@ async def on_message(message):
             mm = timers[mess.upper()]['minute']
             s = timers[mess.upper()]['second']
             await client.send_message(message.channel, GetTimeTill(mess, y, m, d, h, mm, s))
-            
+
             #with open('data/timers.json', 'w') as f:
                 #f.write(json.dumps(timers, sort_keys=True, indent=4, separators=(',', ': ')))
         except:
@@ -59,7 +60,7 @@ async def on_message(message):
             y = int(args[2])
             m = int(args[3])
             d = int(args[4])
-            h = int(args[5])
+            h = int(args[5])-1
             mm = int(args[6])
             s = int(args[7])
 
@@ -93,23 +94,34 @@ async def NewTimer(chan, timers, mess, y, m, d, h, mm, s):
         await client.send_message(chan, "A timer with that name already exists")
 
 def GetTimeTill(mess, y, m, d, h, mm, s):
-    targetDT = datetime.datetime(y,m,d,h,s)
     currentDT = datetime.datetime.utcnow()
-    diffDT = (targetDT - currentDT)
+    try:
+        rd = relativedelta(datetime.datetime(y, m, d, h, mm, s), currentDT)
+    except:
+        return "Timer " + mess + " complete!"
+    return "Time until " + mess + ": %(years)d years, %(months)d months, %(days)d days, %(hours)d hours, %(minutes)d minutes, %(days)d seconds." % rd.__dict__
 
-    # Days
-    days = diffDT.days
-
-    # Hours
-    hours = int(diffDT.seconds / 60 / 60) - 1
-
-    # Minutes
-    minutes = int(diffDT.seconds / 60) - 1 - ((1 + hours) * 60)
-
-    # Seconds
-    seconds = int(diffDT.seconds) - 1 - ((1 + hours) * 60 * 60) - ((1 + minutes) * 60)
-
-    return "time until " + mess + ": " + str(days) + " days, " + str(hours) + " hours, " + str(minutes) + " minutes, " + str(seconds) + " seconds, "
+# def GetTimeTill(mess, y, m, d, h, mm, s):
+#     targetDT = datetime.datetime(y,m,d,h,s)
+#     currentDT = datetime.datetime.utcnow()
+#     diffDT = (targetDT - currentDT)
+#
+#     # Days
+#     days = diffDT.days
+#
+#     # Hours
+#     hours = int(diffDT.seconds / 60 / 60) - 1
+#     if hours < 0:
+#         days = 0
+#         hours += 23
+#
+#     # Minutes
+#     minutes = int(diffDT.seconds / 60) - 1 - ((1 + hours) * 60) # Reports for returning wrong minute, unable to reproduce
+#
+#     # Seconds
+#     seconds = int(diffDT.seconds) - 1 - ((1 + hours) * 60 * 60) - ((1 + minutes) * 60)
+#
+#     return "time until " + mess + ": " + str(days) + " days, " + str(hours) + " hours, " + str(minutes) + " minutes, " + str(seconds) + " seconds."
 
 # This was an old attempt but I'm not deleting it because i like the month thing
 #
