@@ -99,7 +99,7 @@ def GetTimeTill(mess, y, m, d, h, mm, s):
         rd = relativedelta(datetime.datetime(y, m, d, h, mm, s), currentDT)
     except:
         return "Timer " + mess + " complete!"
-    return "Time until " + mess + ": %(years)d years, %(months)d months, %(days)d days, %(hours)d hours, %(minutes)d minutes, %(days)d seconds." % rd.__dict__
+    return "Time until " + mess + ": "+ str(rd.years) +" years, "+ str(rd.months) +" months, "+ str(rd.days) +" days, "+ str(rd.hours) +" hours, "+ str(rd.minutes) +" minutes, " + str(rd.seconds) + " seconds."
 
 # def GetTimeTill(mess, y, m, d, h, mm, s):
 #     targetDT = datetime.datetime(y,m,d,h,s)
