@@ -8,7 +8,7 @@ import threading
 from dateutil.relativedelta import relativedelta
 
 Client = discord.Client()
-client = commands.Bot(command_prefix = "time till ")
+client = commands.Bot(command_prefix = "time until ")
 
 # Prepare key
 key = open('key.txt', 'r')
@@ -22,13 +22,17 @@ print(str(currentDT.year) + ", " + str(currentDT.month) + ", " +str(currentDT.da
 # Boot confirmation
 @client.event
 async def on_ready():
-    print("Botesaw is readyyyy")
+    print("Ready")
 
 # Read message
 @client.event
 async def on_message(message):
     # Time till command
-    if message.content.upper().startswith("TIME TILL "):
+    if message.content.upper().startswith("TIME UNTIL "):
+    
+        if message.author == client.user:
+            return
+        
         try:
             args = message.content.split(" ")
 
@@ -44,12 +48,36 @@ async def on_message(message):
             h = timers[mess.upper()]['hour']
             mm = timers[mess.upper()]['minute']
             s = timers[mess.upper()]['second']
-            await client.send_message(message.channel, GetTimeTill(mess, y, m, d, h, mm, s))
+            await message.channel.send(GetTimeTill(mess, y, m, d, h, mm, s))
 
-            #with open('data/timers.json', 'w') as f:
-                #f.write(json.dumps(timers, sort_keys=True, indent=4, separators=(',', ': ')))
         except:
-            await client.send_message(message.channel, "That timer doesn't exist! ensure spelling is exact, or type 'new timer, NAME' to create a new timer")
+            print("Exception in TIME UNTIL: message content follows")
+            print(message.content)
+            await message.channel.send("Broken")
+
+    if message.content.upper().startswith("HOW MANY HOURS"):
+        try:
+            args = message.content.split(" ")
+
+            # Set message to check
+            mess = "Gloomhaven"
+            # JSON file
+            with open('data/timers.json', 'r') as f:
+                timers = json.load(f)
+
+            y = timers[mess.upper()]['year']
+            m = timers[mess.upper()]['month']
+            d = timers[mess.upper()]['day']
+            h = timers[mess.upper()]['hour']
+            mm = timers[mess.upper()]['minute']
+            s = timers[mess.upper()]['second']
+            await message.channel.send(GetTimeTill(mess, y, m, d, h, mm, s))
+
+        except:
+            print("Exception in HOW MANY HOURS: message content follows")
+            print(message.content)
+            await message.channel.send("Still broken")
+            # await message.channel.send("That timer doesn't exist! ensure spelling is exact, or type 'new timer, NAME' to create a new timer")
 
     # New timer
     if message.content.upper().startswith("NEW TIMER, "):
@@ -75,8 +103,10 @@ async def on_message(message):
                 f.write(json.dumps(timers, sort_keys=True, indent=4, separators=(',', ': ')))
 
         except:
-            await client.send_message(message.channel, "Sorry no can do, invalid syntax my dude\n\nUsage: **NEW TIMER, unique title with any spacing, 4digityear, month(1-12), day(1-31), hour(1-24), minute(1-60), second(1-60)**\nOnly use integer numbers for times, and divide each argument with ONE comma and ONE space.")
+            await message.channel.send("Sorry no can do, invalid syntax my dude\n\nUsage: **NEW TIMER, unique title with any spacing, 4digityear, month(1-12), day(1-31), hour(1-24), minute(1-60), second(1-60)**\nOnly use integer numbers for times, and divide each argument with ONE comma and ONE space.")
 
+    if message.content.upper().startswith("!18XX"):
+        await message.author.send("Not yet...")
 
 # Function for adding new timer
 async def NewTimer(chan, timers, mess, y, m, d, h, mm, s):
@@ -88,10 +118,10 @@ async def NewTimer(chan, timers, mess, y, m, d, h, mm, s):
         timers[mess]['hour'] = h
         timers[mess]['minute'] = mm
         timers[mess]['second'] = s
-        await client.send_message(chan, "Successfully added new timer: " + mess)
+        await chan.send("Successfully added new timer: " + mess)
         print("ADDED NEW TIMER TO TIMERS.JSON: " + mess)
     else:
-        await client.send_message(chan, "A timer with that name already exists")
+        await chan.send("A timer with that name already exists")
 
 def GetTimeTill(mess, y, m, d, h, mm, s):
     currentDT = datetime.datetime.utcnow()
