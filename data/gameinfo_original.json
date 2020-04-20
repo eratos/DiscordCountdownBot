@@ -1,0 +1,43 @@
+{
+	"Games" : [{
+				"Name": "noughts-and-crosses",
+				"MaxID": 1,
+				"Seats": ["X", "O"],
+				"InitialState" : {
+					"Board": [
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						""
+					],
+					"Id": 1,
+					"Seats": [],
+					"Turn": "X"
+				}
+			},{
+				"Name": "oxo",
+				"MaxID": 1,
+				"Seats": ["X", "O"],
+				"InitialState" : {
+					"Board": [
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						"",
+						""
+					],
+					"Id": 1,
+					"Seats": [],
+					"Turn": "X"
+				}
+			}]
+}

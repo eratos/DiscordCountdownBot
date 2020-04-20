@@ -1,0 +1,14 @@
+version: '3'
+services:
+    discord-bot:
+        build: .
+        volumes:
+            - ./data:/usr/src/app/data
+        environment:
+            PYTHONUNBUFFERED: 1
+            TZ: GB
+
+    bot-db:
+        image: mongo
+        ports:
+            - 27017:27017
