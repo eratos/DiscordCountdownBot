@@ -11,6 +11,7 @@ import random
 import types
 from dateutil.relativedelta import relativedelta
 import pymongo
+import re
 
 client = commands.Bot(command_prefix = '!')
 
@@ -203,6 +204,8 @@ usedGoals = []
 
 draftOriginal = ["Big4", "MS", "CWI", "Mail", "LSL", "MC", "OI", "MPC", "SC", "TBC", "Blank"]
 
+last_redacto = ""
+
 # Prepare key
 key = open('key.txt', 'r')
 token = key.read()
@@ -225,6 +228,7 @@ async def on_ready():
     #for u in client.users:
     #    print(u.name + ":" + str(u.id))
     games.init_db()
+    last_redacto = ""
 
 # Read message
 @client.event
@@ -259,9 +263,10 @@ async def on_message(message):
 
             await message.channel.send(GetTimeTill(mess, y, m, d, h, mm, s))
 
-        except:
+        except Exception as e:
             print("Exception in TIME UNTIL: message content follows")
             print(message.content)
+            print(e)
             await message.channel.send("¯\_(ツ)_/¯")
 
     if message.content.upper().startswith("HOW MANY HOURS"):
@@ -282,9 +287,11 @@ async def on_message(message):
             s = timers[mess.upper()]['second']
             await message.channel.send(GetTimeTill(mess, y, m, d, h, mm, s))
 
-        except:
+        except Exception as e:
             print("Exception in HOW MANY HOURS: message content follows")
             print(message.content)
+            print(e)
+            await message.channel.send("¯\_(ツ)_/¯")
             # await message.channel.send("Still broken")
             # await message.channel.send("That timer doesn't exist! ensure spelling is exact, or type 'new timer, NAME' to create a new timer")
 
@@ -326,8 +333,31 @@ async def on_message(message):
             
         await message.author.send(liveGoals.pop())
         await message.author.send(liveGoals.pop())
+
+    mum = False
+    match = re.search("^YOUR M(?:U|O)M IS (.*)", message.content, re.I)
+    if match:  
+        mum = True
+        await message.channel.send("Your face is " + match.group(1))
+
+    match = re.search("^YOUR M(?:U|O)M'*S (.*)", message.content, re.I)
+    if match:     
+        mum = True
+        await message.channel.send("Your face's " + match.group(1))
+
+    if not mum:
+        match = re.search("^YOUR M(?:U|O)M (.*)", message.content, re.I)
+        if match:     
+            await message.channel.send("Your face " + match.group(1))       
         
     await client.process_commands(message)
+
+# Read message
+@client.event
+async def on_message_delete(message):
+    global last_redacto
+    print("REDACTO ALERT! - {} deleted {}".format(message.author,message.content))
+    last_redacto = "{} redacto'd {}".format(message.author,message.content)
 
 # Function for adding new timer
 async def NewTimer(chan, timers, mess, y, m, d, h, mm, s):
@@ -350,7 +380,19 @@ def GetTimeTill(mess, y, m, d, h, mm, s):
         rd = relativedelta(datetime.datetime(y, m, d, h, mm, s), currentDT)
     except:
         return "Timer " + mess + " complete!"
+        
+    if rd.days < 0:
+        return "You tell me!"
+        
+    if rd.days == 0 and rd.hours < -5:
+        return "You tell me!"
+    
     return "Time until " + mess + ": "+ str(rd.years) +" years, "+ str(rd.months) +" months, "+ str(rd.days) +" days, "+ str(rd.hours) +" hours, "+ str(rd.minutes) +" minutes, " + str(rd.seconds) + " seconds."
+
+# Game-y stuff starts here.
+@client.command()
+async def redacto(context, *arg):
+    await context.send(last_redacto)
 
 # Game-y stuff starts here.
 @client.command()
@@ -380,6 +422,37 @@ async def newgame(context, *args):
 async def joingame(context, *args):
     response = await games.join_game(args[0], args[1] if len(args)>1 else None, context.author.name, context.author.id)
     await context.author.send(response)
+
+def roll_one(sides):
+    return random.randint(1,sides)
+    
+@client.command()
+async def roll(context, arg):
+    """ Parse strings like "2d6" or "1d20" and roll accordingly """
+    pattern = re.compile(r'^(?P<count>[0-9]*d)?(?P<sides>[0-9]+)$')
+    match = re.match(pattern, arg)
+
+    if not match:
+        await context.channel.send("¯\_(ツ)_/¯ I don't know how to roll {}".format(arg))
+        raise ValueError() # invalid input string
+
+    sides = int(match.group('sides'))
+    try:
+        count = int(match.group('count')[:-1])
+    except:
+        count = 1
+
+    rolls = [ roll_one(sides) for i in range(count) ]
+    result = ",".join(str(r) for r in rolls)
+    
+    response = "Rolled {} and got [{}] which sums to {}".format(arg, result, sum(rolls))
+    try:
+        await context.channel.send(response)
+    except:
+        try:
+            await context.channel.send("Can't send the list of values, but the sum was {}".format(sum(rolls)))
+        except:
+            await context.channel.send("¯\_(ツ)_/¯")
     
 # Run bot
 client.run(token)
