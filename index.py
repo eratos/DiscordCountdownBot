@@ -13,7 +13,12 @@ from dateutil.relativedelta import relativedelta
 import pymongo
 import re
 
-client = commands.Bot(command_prefix = '!')
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+intents.message_content
+
+client = commands.Bot(command_prefix = '!', intents=intents)
 
 class Games(object):
     def __init__(self):
@@ -433,6 +438,8 @@ async def roll(context, arg):
     match = re.match(pattern, arg)
 
     if not match:
+        if arg.upper().startswith("RICK"):
+            await context.channel.send("https://www.youtube.com/watch?v=xvFZjo5PgG0".format(arg))
         await context.channel.send("¯\_(ツ)_/¯ I don't know how to roll {}".format(arg))
         raise ValueError() # invalid input string
 
@@ -442,6 +449,10 @@ async def roll(context, arg):
     except:
         count = 1
 
+    if count > 9000:
+        await context.channel.send("But that's over 9000!".format(arg))
+        raise ValueError() # invalid input string
+    
     rolls = [ roll_one(sides) for i in range(count) ]
     result = ",".join(str(r) for r in rolls)
     
@@ -453,6 +464,11 @@ async def roll(context, arg):
             await context.channel.send("Can't send the list of values, but the sum was {}".format(sum(rolls)))
         except:
             await context.channel.send("¯\_(ツ)_/¯")
+
+#@client.command()
+#async def speak(context, arg):
+#    await context.channel.send(arg, tts=True)
+
     
 # Run bot
 client.run(token)

@@ -24,12 +24,12 @@
         "year": 2021
     },
     "GLOOMHAVEN": {
-        "day": 13,
-        "hour": 21,
+        "day": 9,
+        "hour": 19,
         "minute": 0,
-        "month": 8,
+        "month": 9,
         "second": 0,
-        "year": 2432
+        "year": 2022
     },
     "GLOOMHAVEN EXPANSION": {
         "day": 21,
@@ -56,19 +56,28 @@
         "year": 2020
     },
 	"PUZZLE HUNT": {
-        "day": 20,
-        "hour": 17,
+        "day": 18,
+        "hour": 18,
         "minute": 0,
         "month": 6,
         "second": 0,
-        "year": 2020
+        "year": 2022
     },
 	"NEXT BANK HOLIDAY": {
-        "day": 31,
+        "day": 28,
         "hour": 0,
         "minute": 0,
-        "month": 5,
+        "month": 8,
         "second": 0,
-        "year": 2021
+        "year": 2022
+    },
+	"ELECTION": {
+        "day": 24,
+        "hour": 0,
+        "minute": 0,
+        "month": 1,
+        "second": 0,
+        "year": 2025
     }
+
 }
