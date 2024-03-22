@@ -228,7 +228,7 @@ print(os.getcwd())
 @client.event
 async def on_ready():
     print("Ready")
-    game = discord.Game("with a Mongo Database")
+    game = discord.Game("with your heart.")
     await client.change_presence(status = discord.Status.idle, activity = game)
     #for u in client.users:
     #    print(u.name + ":" + str(u.id))
