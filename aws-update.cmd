@@ -1,0 +1,1 @@
+aws ecs update-service --cluster default --service countdown-service --force-new-deployment
