@@ -1,1 +1,1 @@
-aws ecs update-service --cluster default --service countdown-service --force-new-deployment
+aws ecs update-service --region us-east-1 --cluster default --service countdown-service --force-new-deployment

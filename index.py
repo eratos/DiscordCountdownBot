@@ -272,7 +272,7 @@ async def on_message(message):
             print("Exception in TIME UNTIL: message content follows")
             print(message.content)
             print(e)
-            await message.channel.send("¯\_(ツ)_/¯")
+            await message.channel.send("¯\\_(ツ)_/¯")
 
     if message.content.upper().startswith("HOW MANY HOURS"):
         try:
@@ -296,7 +296,7 @@ async def on_message(message):
             print("Exception in HOW MANY HOURS: message content follows")
             print(message.content)
             print(e)
-            await message.channel.send("¯\_(ツ)_/¯")
+            await message.channel.send("¯\\_(ツ)_/¯")
             # await message.channel.send("Still broken")
             # await message.channel.send("That timer doesn't exist! ensure spelling is exact, or type 'new timer, NAME' to create a new timer")
 
@@ -440,7 +440,7 @@ async def roll(context, arg):
     if not match:
         if arg.upper().startswith("RICK"):
             await context.channel.send("https://www.youtube.com/watch?v=xvFZjo5PgG0".format(arg))
-        await context.channel.send("¯\_(ツ)_/¯ I don't know how to roll {}".format(arg))
+        await context.channel.send("¯\\_(ツ)_/¯ I don't know how to roll {}".format(arg))
         raise ValueError() # invalid input string
 
     sides = int(match.group('sides'))
@@ -463,7 +463,7 @@ async def roll(context, arg):
         try:
             await context.channel.send("Can't send the list of values, but the sum was {}".format(sum(rolls)))
         except:
-            await context.channel.send("¯\_(ツ)_/¯")
+            await context.channel.send("¯\\_(ツ)_/¯")
 
 #@client.command()
 #async def speak(context, arg):
