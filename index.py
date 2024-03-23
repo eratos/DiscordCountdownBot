@@ -211,11 +211,6 @@ draftOriginal = ["Big4", "MS", "CWI", "Mail", "LSL", "MC", "OI", "MPC", "SC", "T
 
 last_redacto = ""
 
-# Prepare key
-key = open('key.txt', 'r')
-token = key.read()
-key.close()
-
 #Prepare datetime things
 currentDT = datetime.datetime.utcnow()
 print(str(currentDT.year) + ", " + str(currentDT.month) + ", " +str(currentDT.day) + ", " +str(currentDT.hour) + ", " +str(currentDT.minute) + ", " +str(currentDT.second))
@@ -470,5 +465,10 @@ async def roll(context, arg):
 #    await context.channel.send(arg, tts=True)
 
     
+# Prepare key
+key = open('key.txt', 'r')
+token = key.read()
+key.close()
+
 # Run bot
 client.run(token)
